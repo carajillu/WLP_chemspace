@@ -20,6 +20,7 @@ def basic_descriptors_from_smiles(smiles: str) -> dict[str, float | None]:
         f"NumHDonors":Descriptors.NumHDonors(mol) if mol is not None else None,
         f"NumRotatableBonds":Descriptors.NumRotatableBonds(mol) if mol is not None else None,
         f"MW":Descriptors.MolWt(mol) if mol is not None else None,
+        f"TPSA":Descriptors.TPSA(mol) if mol is not None else None,
         f"CrippenLogP":Crippen.MolLogP(mol) if mol is not None else None,
     }
     return dic
