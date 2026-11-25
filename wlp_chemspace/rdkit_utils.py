@@ -13,6 +13,16 @@ def basic_descriptors_from_smiles(smiles: str) -> dict[str, float | None]:
     Returns:
     dict: A dictionary containing the calculated descriptors.
     """
+    if smiles is None or smiles == "":
+        return {
+            "NumAromaticRings": None,
+            "NumHAcceptors": None,
+            "NumHDonors": None,
+            "NumRotatableBonds": None,
+            "MW": None,
+            "TPSA": None,
+            "CrippenLogP": None,
+        }
     mol=MolFromSmiles(smiles)
     dic={
         f"NumAromaticRings": Descriptors.NumAromaticRings(mol) if mol is not None else None,
@@ -62,7 +72,15 @@ def scaffold_from_smiles(smiles,scaffold_type: str):
     """
     if scaffold_type not in SCAFFOLD_TYPES:
         raise ValueError(f"scaffold_type must be one of {SCAFFOLD_TYPES}")
-    mol = MolFromSmiles(smiles)
+    if smiles is None or smiles == "":
+        return None
+    try:
+        mol = MolFromSmiles(smiles)
+    except Exception as e:
+        print(f"Error processing SMILES '{smiles}': {e}")
+        return None
+    if mol is None:
+        return None
     scaff=MurckoScaffold.GetScaffoldForMol(mol)
     if scaffold_type == "bajorath":
         scaff=Chem.DeleteSubstructs(scaff, PATT)
